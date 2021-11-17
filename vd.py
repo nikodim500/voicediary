@@ -21,7 +21,7 @@ logger.debug('----------------==============>>>>>>>>>>>>>> STARTED <<<<<<<<<<<<<
 print('----------------==============>>>>>>>>>>>>>> STARTED <<<<<<<<<<<<<<<=============---------------------')
 
 
-@route("/", methods=["POST"])
+@route("/", method='POST')
 def main():
     print('main route')
     print(request)
