@@ -69,4 +69,9 @@ def log():
 
 application = default_app()
 
-run(host='192.168.1.56', port=4044)
+if os.environ.get('APP_LOCATION') == 'heroku':
+    run(host="0.0.0.0", port=int(os.environ.get("PORT", 4044)))
+else:
+    run(host='localhost', port=4044, debug=True)
+
+
