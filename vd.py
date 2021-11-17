@@ -23,6 +23,7 @@ print('----------------==============>>>>>>>>>>>>>> STARTED <<<<<<<<<<<<<<<=====
 
 @route("/", methods=["POST"])
 def main():
+    print(request)
     req = request.json
     print(req)
     logger.debug(req)
