@@ -18,11 +18,13 @@ logger.setLevel(logging.DEBUG)
 logger.addHandler(handler)
 
 logger.debug('----------------==============>>>>>>>>>>>>>> STARTED <<<<<<<<<<<<<<<=============---------------------')
+print('----------------==============>>>>>>>>>>>>>> STARTED <<<<<<<<<<<<<<<=============---------------------')
 
 
 @route("/", methods=["POST"])
 def main():
     req = request.json
+    print(req)
     logger.debug(req)
 
     response = {
