@@ -58,7 +58,7 @@ def home():
     return dict(
         year=dt.date.today().year,
         appname='Voice Diary',
-        owner='nikodim'
+        owner='Nikolay Chetverikov'
     )
 
 
@@ -69,9 +69,11 @@ def log():
 
 application = default_app()
 
-if os.environ.get('APP_LOCATION') == 'heroku':
-    run(host="0.0.0.0", port=int(os.environ.get("PORT", 4044)))
-else:
-    run(host='localhost', port=4044, debug=True)
+run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
+#if os.environ.get('APP_LOCATION') == 'heroku':
+#    run(host="0.0.0.0", port=int(os.environ.get("PORT", 4044)))
+#else:
+#    run(host='localhost', port=4044, debug=True)
 
 
