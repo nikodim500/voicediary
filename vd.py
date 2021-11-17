@@ -20,7 +20,7 @@ logger.addHandler(handler)
 logger.debug('----------------==============>>>>>>>>>>>>>> STARTED <<<<<<<<<<<<<<<=============---------------------')
 
 
-@route("/vd", methods=["POST"])
+@route("/", methods=["POST"])
 def main():
     req = request.json
     logger.debug(req)
@@ -50,7 +50,6 @@ def send_static(filename):
     return static_file(filename, root='./static/')
 
 
-@route('/')
 @route('/about')
 @view('home')
 def home():
