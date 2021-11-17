@@ -23,6 +23,7 @@ print('----------------==============>>>>>>>>>>>>>> STARTED <<<<<<<<<<<<<<<=====
 
 @route("/", methods=["POST"])
 def main():
+    print('main route')
     print(request)
     req = request.json
     print(req)
@@ -74,8 +75,10 @@ application = default_app()
 #run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
 
 if os.environ.get('APP_LOCATION') == 'heroku':
+    print('Running on heroku')
     run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
 else:
     run(host='localhost', port=4044, debug=True)
+    print('Running locally')
 
 
