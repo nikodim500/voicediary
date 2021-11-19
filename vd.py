@@ -42,7 +42,9 @@ def main():
 
     user_name = None
     user_id = req['session']['user']['user_id']
+    print('Getting user ' + user_id)
     user = vddb.getUser(user_id)
+    print(user)
 
     if user:
         response['response']['text'] = 'Приветствую, {}'.format(user[1])
