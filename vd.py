@@ -39,6 +39,7 @@ def main():
             "end_session": False
         }
     }
+    # TODO: save json to DB
 
     user_name = None
     user_id = req['session']['user']['user_id']
@@ -51,7 +52,7 @@ def main():
         if user_name:
             response['response']['text'] = 'Приветствую, {}'.format(user[1])
         else:
-            vddb.createUser(user_id, req['request']['original_utterance'])
+            vddb.updateUser(user_id, req['request']['original_utterance'])
     else:
         print('New user!')
         user = vddb.createUser(user_id)
