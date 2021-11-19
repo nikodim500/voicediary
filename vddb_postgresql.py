@@ -6,16 +6,16 @@ from datetime import datetime, timezone
 from secrets import choice
 import string
 
-
 alphabet = (string.ascii_letters + string.digits).translate({ord(c): None for c in 'IO0'})
 
-#DATABASE_URL = os.environ['DATABASE_URL']
+# DATABASE_URL = os.environ['DATABASE_URL']
 
 DATABASE_URL = os.environ.get('DATABASE_URL')
 print('DATABASE_URL = ' + DATABASE_URL)
 
 connection = None
 cursor = None
+
 
 def initConnection():
     global connection, cursor, DATABASE_URL
@@ -30,9 +30,11 @@ def initConnection():
         return False
     return True
 
+
 def closeConnection():
     global connection
     connection.close()
+
 
 def findUserByLogin(login):
     global cursor
@@ -42,20 +44,32 @@ def findUserByLogin(login):
     return userid
 
 
-def createUser(id, name, login, password):
+def createUser(id, name=None, login=None, password=None):
     global connection, cursor
-    sql = 'INSERT INTO public.user (user_id, user_name, user_login = '', user_pwd = '') VALUES (%s, %s, %s, %s)'
+    sql = 'INSERT INTO public.user (user_id, user_name, user_login, user_pwd) VALUES (%s, %s, %s, %s)'
     cursor.execute(sql, (id, name, login, password))
     connection.commit()
     sql = 'SELECT * FROM public.user WHERE user_id = %s'
-    cursor.execute(sql, (id, ))
+    cursor.execute(sql, (id,))
     user = cursor.fetchone()
     return user
+
+
+def updateUser(id, name, login, password):
+    global connection, cursor
+    sql = 'UPDATE public.user SET (user_name, user_login, user_pwd) = (%s, %s, %s) WHERE user_id = %s'
+    cursor.execute(sql, (name, login, password, id))
+    connection.commit()
+    sql = 'SELECT * FROM public.user WHERE user_id = %s'
+    cursor.execute(sql, (id,))
+    user = cursor.fetchone()
+    return user
+
 
 def getUser(id):
     global connection, cursor
     sql = 'SELECT * FROM public.user WHERE user_id = %s'
-    cursor.execute(sql, (id, ))
+    cursor.execute(sql, (id,))
     user = cursor.fetchone()
     return user
 
@@ -84,6 +98,7 @@ def createRecord(diary_id, title):
     record = cursor.fetchone()
     return record
 
+
 def saveRecordText(id, text):
     global connection, cursor
     dt = datetime.now(timezone.utc)
@@ -96,7 +111,10 @@ def saveRecordText(id, text):
 # Unit tests
 def utCreateRecords():
     global alphabet
-    user = createUser('hhef38e38hf83f3pkd20kggk48', 'Отец Никодим', 'chetverikovnik@yandex.ru', ''.join(choice(alphabet) for i in range(14)))
+    user = createUser('j3493nJWIE3894R3KJ8Fkdkd8')
+    print(user)
+    user = updateUser('j3493nJWIE3894R3KJ8Fkdkd8', 'Брат Онуфрий', 'chetver@yandex.ru',
+                      ''.join(choice(alphabet) for i in range(14)))
     print(user)
     user_id = user[0]
     # user_id = findUserByLogin('chetverikovnik@yandex.ru')

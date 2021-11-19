@@ -45,7 +45,6 @@ def main():
     print('Getting user ' + user_id)
     user = vddb.getUser(user_id)
     print(user)
-    wait_for_name = False
 
     if user:
         response['response']['text'] = 'Приветствую, {}'.format(user[1])
