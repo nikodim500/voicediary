@@ -57,13 +57,11 @@ def createRecord(diary_id, title, text):
     recid = cursor.fetchone()[0]
     return recid
 
-
-user_id = createUser('nikodim', 'chetverikovnik@yandex.ru', ''.join(choice(alphabet) for i in range(14)))
-# user_id = findUserByLogin('chetverikovnik@yandex.ru')
-
-diary_id = createDiary(user_id, 'записки лешего'.encode())
-
-rec_id = createRecord(diary_id, '14 ноября 2021 года. утро'.encode(),
+def utCreateRecords():
+    user_id = createUser('nikodim', 'chetverikovnik@yandex.ru', ''.join(choice(alphabet) for i in range(14)))
+    # user_id = findUserByLogin('chetverikovnik@yandex.ru')
+    diary_id = createDiary(user_id, 'записки лешего'.encode())
+    rec_id = createRecord(diary_id, '14 ноября 2021 года. утро'.encode(),
                       'Не следует, однако забывать, что постоянный количественный рост и сфера нашей активности требуют от нас анализа дальнейших'
                       ' направлений развития. Повседневная практика показывает, что постоянное информационно-пропагандистское обеспечение нашей деятельности'
                       ' в значительной степени обуславливает создание системы обучения кадров, соответствует насущным потребностям. Задача организации,'

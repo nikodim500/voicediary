@@ -4,6 +4,7 @@ from logging.handlers import RotatingFileHandler
 import os
 import datetime as dt
 import json
+import vddb_postgresql as vddb
 
 # Enable logging on local filesystem
 
@@ -16,6 +17,8 @@ handler.setFormatter(formatter)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 logger.addHandler(handler)
+
+vddb.initConnection()
 
 logger.debug('----------------==============>>>>>>>>>>>>>> STARTED <<<<<<<<<<<<<<<=============---------------------')
 print('----------------==============>>>>>>>>>>>>>> STARTED <<<<<<<<<<<<<<<=============---------------------')
@@ -37,14 +40,17 @@ def main():
         }
     }
 
-    if req["session"]["new"]:       # New user started dialog
-        response["response"]["text"] = "Журнал создан"
+    user_name = None
+    user_id = req['session']['user']['user_id']
+    user = vddb.getUser(user_id)
+
+    if user:
+        response['response']['text'] = 'Приветствую, {}'.format(user[1])
     else:
-        response["response"]["text"] = "Новый журнал"
-#        if req["request"]["original_utterance"].lower() in ["хорошо", "отлично"]:
-#            response["response"]["text"] = "Супер! Я за вас рада!"
-#        elif req["request"]["original_utterance"].lower() in ["плохо", "скучно"]:
-#            response["response"]["text"] = "Это печально... нужно было позвать меня!"
+        if user_name:
+            vddb.createUser(user_id, req['request']['original_utterance'])
+        else:
+            response['response']['text'] = 'Здравствуйте, новый пользователь. Как Вас зовут?'
 
     return json.dumps(response)
 
@@ -81,4 +87,4 @@ else:
     run(host='localhost', port=4044, debug=True)
     print('Running locally')
 
-
+vddb.closeConnection()
