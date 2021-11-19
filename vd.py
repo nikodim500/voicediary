@@ -44,16 +44,18 @@ def main():
     user_id = req['session']['user']['user_id']
     print('Getting user ' + user_id)
     user = vddb.getUser(user_id)
-    print(user)
 
     if user:
-        response['response']['text'] = 'Приветствую, {}'.format(user[1])
-    else:
-        if wait_for_name:
-            vddb.createUser(user_id, req['request']['original_utterance'])
+        print(user)
+        user_name = user[1]
+        if user_name:
+            response['response']['text'] = 'Приветствую, {}'.format(user[1])
         else:
-            response['response']['text'] = 'Здравствуйте, новый пользователь. Как Вас зовут?'
-            wait_for_name = True
+            vddb.createUser(user_id, req['request']['original_utterance'])
+    else:
+        print('New user!')
+        user = vddb.createUser(user_id)
+        response['response']['text'] = 'Здравствуйте, новый пользователь. Как Вас зовут?'
 
     return json.dumps(response)
 
