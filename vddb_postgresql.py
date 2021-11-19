@@ -67,7 +67,7 @@ def updateUser(id, name, login, password):
 
 def updateUserField(id, field, value):
     global connection, cursor
-    sql = 'UPDATE public.user SET % = %s WHERE user_id = %s'
+    sql = 'UPDATE public.user SET %s = %s WHERE user_id = %s'
     cursor.execute(sql, (field, value, id))
     connection.commit()
     sql = 'SELECT * FROM public.user WHERE user_id = %s'
