@@ -10,7 +10,13 @@ import string
 alphabet = (string.ascii_letters + string.digits).translate({ord(c): None for c in 'IO0'})
 
 #DATABASE_URL = os.environ['DATABASE_URL']
-DATABASE_URL = 'postgres://ossiehbcbpkfns:90ef00ae83b5adf8971a0f0c64323c4e55d38934cd1be62cbc72d0a9f37f014f@ec2-63-32-7-190.eu-west-1.compute.amazonaws.com:5432/d2ls05mipfa270'
+
+if os.environ.get('APP_LOCATION') == 'heroku':
+    DATABASE_URL = os.environ.get('DATABASE_URL')
+else:
+    DATABASE_URL = 'postgres://ossiehbcbpkfns:90ef00ae83b5adf8971a0f0c64323c4e55d38934cd1be62cbc72d0a9f37f014f@ec2-63-32-7-190.eu-west-1.compute.amazonaws.com:5432/d2ls05mipfa270'
+
+print('DATABASE_URL = ' + DATABASE_URL)
 
 connection = None
 cursor = None
