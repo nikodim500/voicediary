@@ -52,7 +52,9 @@ def main():
         if user_name:
             response['response']['text'] = 'Приветствую, {}'.format(user[1])
         else:
-            vddb.updateUser(user_id, req['request']['original_utterance'])
+            user_name = req['request']['original_utterance']
+            user = vddb.updateUserName(user_id, user_name)
+            response['response']['text'] = 'Пользователь {} создан'.format(user[1])
     else:
         print('New user!')
         user = vddb.createUser(user_id)

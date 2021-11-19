@@ -65,6 +65,25 @@ def updateUser(id, name, login, password):
     user = cursor.fetchone()
     return user
 
+def updateUserField(id, field, value):
+    global connection, cursor
+    sql = 'UPDATE public.user SET % = %s WHERE user_id = %s'
+    cursor.execute(sql, (field, value, id))
+    connection.commit()
+    sql = 'SELECT * FROM public.user WHERE user_id = %s'
+    cursor.execute(sql, (id,))
+    user = cursor.fetchone()
+    return user
+
+def updateUserName(id, name):
+    return updateUserField(id, "user_name", name)
+
+def updateUserLogin(id, login):
+    return updateUserField(id, "user_login", login)
+
+def updateUserPassword(id, pwd):
+    return updateUserField(id, "user_pwd", pwd)
+
 
 def getUser(id):
     global connection, cursor
