@@ -24,10 +24,12 @@ logger.debug('----------------==============>>>>>>>>>>>>>> STARTED <<<<<<<<<<<<<
 print('----------------==============>>>>>>>>>>>>>> STARTED <<<<<<<<<<<<<<<=============---------------------')
 
 req_count = 0
+session_id = ""
+new_session = False
 
 @route("/", method='POST')
 def main():
-    global req_count
+    global req_count, session_id, new_session
     print('main route')
     print(request)
     req = request.json
@@ -46,6 +48,10 @@ def main():
     }
     # TODO: save json to DB
 
+    if session_id != req['session']['session_id']:
+        new_session = True
+        session_id = req['session']['session_id']
+
     user_name = None
     user_id = req['session']['user']['user_id']
     print('Getting user ' + user_id)
@@ -55,11 +61,26 @@ def main():
         print(user)
         user_name = user[1]
         if user_name:
-            response['response']['text'] = 'Приветствую, {}'.format(user[1])
+            if new_session:
+                response['response']['text'] = 'Приветствую, {}'.format(user[1])
         else:
             user_name = req['request']['original_utterance']
             user = vddb.updateUserName(user_id, user_name)
             response['response']['text'] = 'Пользователь {} создан'.format(user[1])
+
+        diary = vddb.getDiary(user[4])
+        if diary:
+            diary_id = diary[0]
+            diary_name = diary[3]
+            if diary_name:
+                response['response']['text'] = 'Дальше ничего не придумали. Импровизируй!'
+            else:
+                diary_name = req['request']['original_utterance']
+                diary = vddb.updateDiary(diary_id, diary_name)
+                response['response']['text'] = 'Дневник {} создан'.format(diary[3])
+        else:
+            diary = vddb.createDiary(user_id)
+            response['response']['text'] = response['response']['text'] + '. ' + 'У вас нет дневников. Давайте создадим новый. Скажите название дневника'
     else:
         print('New user!')
         user = vddb.createUser(user_id)

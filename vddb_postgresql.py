@@ -92,8 +92,7 @@ def getUser(id):
     user = cursor.fetchone()
     return user
 
-
-def createDiary(user_id, name):
+def createDiary(user_id, name=None):
     global connection, cursor
     # Insert new record into diary
     sql = 'INSERT INTO diary (user_id, diary_name) VALUES (%s, %s)'
@@ -102,6 +101,21 @@ def createDiary(user_id, name):
     # Retreive ID of new record
     sql = 'SELECT * FROM diary WHERE user_id = %s and diary_name = %s'
     cursor.execute(sql, (user_id, name))
+    diary = cursor.fetchone()
+    return diary
+
+def updateDiary(diary_id, name):
+    global connection, cursor
+    # Update diary
+    sql = 'UPDATE diary SET diary_name = %s WHERE diary_id = %s'
+    cursor.execute(sql, (diary_id, name))
+    connection.commit()
+
+def getDiary(diary_id):
+    global cursor
+    # Retreive current diary
+    sql = 'SELECT * FROM diary WHERE diary_id = %s'
+    cursor.execute(sql, (diary_id))
     diary = cursor.fetchone()
     return diary
 
