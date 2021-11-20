@@ -23,14 +23,19 @@ vddb.initConnection()
 logger.debug('----------------==============>>>>>>>>>>>>>> STARTED <<<<<<<<<<<<<<<=============---------------------')
 print('----------------==============>>>>>>>>>>>>>> STARTED <<<<<<<<<<<<<<<=============---------------------')
 
+req_count = 0
 
 @route("/", method='POST')
 def main():
+    global req_count
     print('main route')
     print(request)
     req = request.json
     print(req)
     logger.debug(req)
+
+    req_count += 1
+    print('Request count = {}'.format(req_count))
 
     response = {
         "version": request.json["version"],
