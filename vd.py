@@ -68,7 +68,7 @@ def main():
             user = vddb.updateUserName(user_id, user_name)
             response['response']['text'] = 'Пользователь {} создан'.format(user[1])
 
-        diary = vddb.getDiary(user[4])
+        diary = vddb.getDiary(user[5])
         if diary:
             diary_id = diary[0]
             diary_name = diary[3]
