@@ -115,7 +115,7 @@ def getDiary(diary_id):
     global cursor
     # Retreive current diary
     sql = 'SELECT * FROM diary WHERE diary_id = %s'
-    cursor.execute(sql, (diary_id))
+    cursor.execute(sql, (diary_id,))
     diary = cursor.fetchone()
     return diary
 
