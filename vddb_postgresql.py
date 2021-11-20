@@ -110,6 +110,11 @@ def updateDiary(diary_id, name):
     sql = 'UPDATE diary SET diary_name = %s WHERE diary_id = %s'
     cursor.execute(sql, (name, diary_id))
     connection.commit()
+    # Retreive ID of new record
+    sql = 'SELECT * FROM diary WHERE diary_id = %s'
+    cursor.execute(sql, (diary_id,))
+    diary = cursor.fetchone()
+    return diary
 
 def getDiary(diary_id):
     global cursor
