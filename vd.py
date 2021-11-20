@@ -90,7 +90,7 @@ def log():
 
 @route('/ping')
 def ping():
-    return 200
+    return "pong"
 
 application = default_app()
 
