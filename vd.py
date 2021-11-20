@@ -88,6 +88,9 @@ def home():
 def log():
     return static_file(log_file, log_path)
 
+@route('/ping')
+def ping():
+    return 200
 
 application = default_app()
 
