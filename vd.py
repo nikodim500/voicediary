@@ -51,6 +51,8 @@ def main():
     if session_id != req['session']['session_id']:
         new_session = True
         session_id = req['session']['session_id']
+    else:
+        new_session = False
 
     user_name = None
     user_id = req['session']['user']['user_id']
