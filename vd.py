@@ -76,9 +76,12 @@ def main():
             if diary_name:
                 response['response']['text'] = 'Дальше ничего не придумали. Импровизируй!'
             else:
-                diary_name = req['request']['original_utterance']
-                diary = vddb.updateDiary(diary_id, diary_name)
-                response['response']['text'] = 'Дневник {} создан'.format(diary[3])
+                if new_session:
+                    response['response']['text'] = 'У вас нет дневников. Давайте создадим новый. Скажите название дневника'
+                else:
+                    diary_name = req['request']['original_utterance']
+                    diary = vddb.updateDiary(diary_id, diary_name)
+                    response['response']['text'] = 'Дневник {} создан'.format(diary[3])
         else:
             diary = vddb.createDiary(user_id)
             response['response']['text'] = response['response']['text'] + '. ' + 'У вас нет дневников. Давайте создадим новый. Скажите название дневника'
