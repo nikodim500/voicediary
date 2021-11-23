@@ -139,7 +139,7 @@ def createRecord(diary_id, title=None):
 def updateRecordTitle(record_id, title):
     global connection, cursor
     dt = datetime.now(timezone.utc)
-    sql = 'UPDATE record SET record_title = %s, changed_at = %s WHERE record_id = %s)'
+    sql = 'UPDATE record SET record_title = %s, changed_at = %s WHERE record_id = %s'
     cursor.execute(sql, (title, dt, record_id))
     connection.commit()
     sql = 'SELECT * FROM record WHERE record_id = %s'
@@ -150,7 +150,7 @@ def updateRecordTitle(record_id, title):
 def updateRecordText(record_id, text):
     global connection, cursor
     dt = datetime.now(timezone.utc)
-    sql = 'UPDATE record SET changed_at = %s record_text = CASE WHEN diary_name IS NULL THEN %s ELSE record_text || ". " || %s END WHERE record_id = %s'
+    sql = 'UPDATE record SET changed_at = %s, record_text = CASE WHEN diary_name IS NULL THEN %s ELSE record_text || ". " || %s END WHERE record_id = %s'
     cursor.execute(sql, (dt, text, record_id))
     connection.commit()
     sql = 'SELECT * FROM record WHERE record_id = %s'
