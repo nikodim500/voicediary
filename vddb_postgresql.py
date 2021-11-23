@@ -128,7 +128,7 @@ def getDiary(diary_id):
 def createRecord(diary_id, title=None):
     global connection, cursor
     dt = datetime.now(timezone.utc)
-    sql = 'INSERT INTO record (diary_id, created_at, record_title = None) VALUES (%s, %s, %s)'
+    sql = 'INSERT INTO record (diary_id, created_at, record_title) VALUES (%s, %s, %s)'
     cursor.execute(sql, (diary_id, dt, title))
     connection.commit()
     sql = 'SELECT * FROM record WHERE diary_id = %s and created_at = %s'
