@@ -100,6 +100,7 @@ def main():
                             else:
                                 if wait_for_text:
                                     record_text = req['request']['original_utterance']
+                                    print(record_text)
                                     vddb.updateRecordText(record[0], record_text)
                                     wait_for_text = False
                                     response['response']['text'] = 'Текст записан'
