@@ -90,7 +90,7 @@ def main():
                                 record_text = req['request']['original_utterance']
                                 vddb.updateRecordText(record[0], record_text)
                                 wait_for_text = False
-                                response['response']['text'] = 'Текст записан'
+                                response['response']['text'] = 'Текст записан. Продолжим запись?'
                             else:
                                 response['response']['text'] = 'Давайте дополним запись. Диктуйте'
                                 wait_for_text = True
@@ -103,9 +103,9 @@ def main():
                                     print(record_text)
                                     vddb.updateRecordText(record[0], record_text)
                                     wait_for_text = False
-                                    response['response']['text'] = 'Текст записан'
+                                    response['response']['text'] = 'Текст записан. Продолжим запись?'
                                 else:
-                                    response['response']['text'] = 'Диктуйте текст записи'
+                                    response['response']['text'] = 'Диктуйте текст'
                                     wait_for_text = True
                     else: # no record title
                         if new_session:
