@@ -151,6 +151,7 @@ def updateRecordText(record_id, text):
     global connection, cursor
     dt = datetime.now(timezone.utc)
     sql = 'UPDATE record SET changed_at = %s, record_text = CASE WHEN diary_name IS NULL THEN %s ELSE record_text || ". " || %s END WHERE record_id = %s'
+    print(sql)
     cursor.execute(sql, (dt, text, record_id))
     connection.commit()
     sql = 'SELECT * FROM record WHERE record_id = %s'
