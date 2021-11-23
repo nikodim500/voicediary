@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS public."user"
     user_login text COLLATE pg_catalog."ru_RU.utf8",
     user_pwd text COLLATE pg_catalog."ru_RU.utf8",
     created_at timestamp with time zone DEFAULT now(),
-    current_diary integer,
+    current_diary_id integer,
     CONSTRAINT user_pkey PRIMARY KEY (user_id)
 )
  
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS public.diary
     user_id text COLLATE pg_catalog."default" NOT NULL,
     diary_name text COLLATE pg_catalog."ru_UA.utf8",
     created_at timestamp with time zone NOT NULL DEFAULT now(),
-    current_record integer,
+    current_record_id integer,
     CONSTRAINT diary_pkey PRIMARY KEY (diary_id),
     CONSTRAINT diary_user_fk FOREIGN KEY (user_id)
         REFERENCES public."user" (user_id) MATCH SIMPLE
@@ -95,7 +95,7 @@ CREATE OR REPLACE FUNCTION public.assign_diary_no()
     VOLATILE NOT LEAKPROOF
 AS $BODY$
 BEGIN
-  UPDATE public.user SET current_diary = NEW.diary_id WHERE user_id = NEW.user_id;
+  UPDATE public.user SET current_diary_id = NEW.diary_id WHERE user_id = NEW.user_id;
   NEW.diary_no = (SELECT COUNT(diary_id)+1 FROM diary WHERE user_id = NEW.user_id);
   RETURN NEW;
 END;

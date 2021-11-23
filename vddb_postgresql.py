@@ -150,7 +150,7 @@ def updateRecordTitle(record_id, title):
 def updateRecordText(record_id, text):
     global connection, cursor
     dt = datetime.now(timezone.utc)
-    sql = 'UPDATE record SET changed_at = %s, record_text = CASE WHEN record_text IS NULL THEN %s ELSE record_text || ". " || %s END WHERE record_id = %s'
+    sql = "UPDATE record SET changed_at = %s, record_text = CASE WHEN record_text IS NULL THEN %s ELSE record_text || '. ' || %s END WHERE record_id = %s"
     cursor.execute(sql, (dt, text, text, record_id))
     connection.commit()
     sql = 'SELECT * FROM record WHERE record_id = %s'
