@@ -26,10 +26,11 @@ print('----------------==============>>>>>>>>>>>>>> STARTED <<<<<<<<<<<<<<<=====
 req_count = 0
 session_id = ""
 new_session = False
+wait_for_text = False
 
 @route("/", method='POST')
 def main():
-    global req_count, session_id, new_session
+    global req_count, session_id, new_session, wait_for_text
     print('main route')
     print(request)
     req = request.json
@@ -79,11 +80,42 @@ def main():
             diary_name = diary[3]
             print('if diary_name {}'.format(diary_name))
             if diary_name:
-                if new_session:
-                    response['response']['text'] = 'Дальше ничего не придумали. Импровизируй!'
-                else:
-                    if req['request']['original_utterance'] == 'Да':
-                        response['response']['text'] = 'Начнем новую запись. Скажите заголовок'
+                record = vddb.getRecord(diary[5])
+                if record:
+                    record_title = record[3]
+                    record_text = record[4]
+                    if record_title:
+                        if record_text:
+                            if wait_for_text:
+                                record_text = req['request']['original_utterance']
+                                vddb.updateRecordText(record[0], record_text)
+                                wait_for_text = False
+                                response['response']['text'] = 'Текст записан'
+                            else:
+                                response['response']['text'] = 'Давайте дополним запись. Диктуйте'
+                                wait_for_text = True
+                        else:
+                            if new_session:
+                                response['response']['text'] = 'Вы не закончили запись с заголовком {}. Диктуйте текст записи'.format(record_title)
+                            else:
+                                if wait_for_text:
+                                    record_text = req['request']['original_utterance']
+                                    vddb.updateRecordText(record[0], record_text)
+                                    wait_for_text = False
+                                    response['response']['text'] = 'Текст записан'
+                                else:
+                                    response['response']['text'] = 'Диктуйте текст записи'
+                                    wait_for_text = True
+                    else: # no record title
+                        if new_session:
+                            response['response']['text'] = 'У Вас нет записей. Давайте создадим новую. Скажите заголовок'
+                        else:
+                             record_title = req['request']['original_utterance']
+                             vddb.updateRecordTitle(record[0], record_title)
+                             response['response']['text'] = 'Начнем новую запись. Скажите заголовок'
+                else: # no record
+                    vddb.createRecord(diary[0])
+                    response['response']['text'] = 'У Вас нет записей. Давайте создадим новую. Скажите заголовок'
             else:
                 if new_session:
                     response['response']['text'] = 'У вас нет дневников. Давайте создадим новый. Скажите название дневника'
