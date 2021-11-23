@@ -125,7 +125,7 @@ def getDiary(diary_id):
     return diary
 
 
-def createRecord(diary_id, title):
+def createRecord(diary_id, title=None):
     global connection, cursor
     dt = datetime.now(timezone.utc)
     sql = 'INSERT INTO record (diary_id, created_at, record_title = None) VALUES (%s, %s, %s)'
