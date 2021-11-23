@@ -59,10 +59,12 @@ def main():
     print('Getting user ' + user_id)
     user = vddb.getUser(user_id)
 
+    print('if user {}'.format(user))
     if user:
-        print(user)
         user_name = user[1]
+        print('if user_name {}'.format(user_name))
         if user_name:
+            print('if user_name new session {}'.format(new_session))
             if new_session:
                 response['response']['text'] = 'Приветствую, {}'.format(user[1])
         else:
@@ -70,20 +72,26 @@ def main():
             user = vddb.updateUserName(user_id, user_name)
             response['response']['text'] = 'Пользователь {} создан'.format(user[1])
 
-        print(user)
         diary = vddb.getDiary(user[5])
+        print('if diary {}'.format(diary))
         if diary:
             diary_id = diary[0]
             diary_name = diary[3]
+            print('if diary_name {}'.format(diary_name))
             if diary_name:
-                response['response']['text'] = 'Дальше ничего не придумали. Импровизируй!'
+                if new_session:
+                    response['response']['text'] = 'Дальше ничего не придумали. Импровизируй!'
+                else:
+                    if req['request']['original_utterance'] == 'Да':
+                        response['response']['text'] = 'Начнем новую запись. Скажите заголовок'
             else:
                 if new_session:
                     response['response']['text'] = 'У вас нет дневников. Давайте создадим новый. Скажите название дневника'
                 else:
                     diary_name = req['request']['original_utterance']
                     diary = vddb.updateDiary(diary_id, diary_name)
-                    response['response']['text'] = 'Дневник {} создан'.format(diary[3])
+                    response['response']['text'] = 'Дневник {} создан. Продолжим?'.format(diary[3])
+
         else:
             diary = vddb.createDiary(user_id)
             response['response']['text'] = response['response']['text'] + '. ' + 'У вас нет дневников. Давайте создадим новый. Скажите название дневника'

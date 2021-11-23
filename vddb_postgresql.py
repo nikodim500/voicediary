@@ -128,7 +128,7 @@ def getDiary(diary_id):
 def createRecord(diary_id, title):
     global connection, cursor
     dt = datetime.now(timezone.utc)
-    sql = 'INSERT INTO record (diary_id, created_at, record_title) VALUES (%s, %s, %s)'
+    sql = 'INSERT INTO record (diary_id, created_at, record_title = None) VALUES (%s, %s, %s)'
     cursor.execute(sql, (diary_id, dt, title))
     connection.commit()
     sql = 'SELECT * FROM record WHERE diary_id = %s and created_at = %s'
@@ -136,14 +136,34 @@ def createRecord(diary_id, title):
     record = cursor.fetchone()
     return record
 
-
-def saveRecordText(id, text):
+def updateRecordTitle(record_id, title):
     global connection, cursor
     dt = datetime.now(timezone.utc)
-    sql = 'UPDATE record SET record_text = %s, changed_at = %s WHERE record_id = %s'
-    cursor.execute(sql, (text, dt, id))
+    sql = 'UPDATE record SET record_title = %s, changed_at = %s WHERE record_id = %s)'
+    cursor.execute(sql, (title, dt, record_id))
     connection.commit()
-    return True
+    sql = 'SELECT * FROM record WHERE record_id = %s'
+    cursor.execute(sql, (record_id,))
+    record = cursor.fetchone()
+    return record
+
+def updateRecordText(record_id, text):
+    global connection, cursor
+    dt = datetime.now(timezone.utc)
+    sql = 'UPDATE record SET changed_at = %s record_text = CASE WHEN diary_name IS NULL THEN %s ELSE record_text || ". " || %s END WHERE record_id = %s'
+    cursor.execute(sql, (dt, text, record_id))
+    connection.commit()
+    sql = 'SELECT * FROM record WHERE record_id = %s'
+    cursor.execute(sql, (record_id,))
+    record = cursor.fetchone()
+    return record
+
+def getRecord(id):
+    global connection, cursor
+    sql = 'SELECT * FROM record WHERE record_id = %s'
+    cursor.execute(sql, (id,))
+    record = cursor.fetchone()
+    return record
 
 
 # Unit tests
@@ -170,4 +190,4 @@ def utCreateRecords():
            'показывает, что реализация намеченных плановых заданий представляет'
     print(record)
     record_id = record[0]
-    saveRecordText(record_id, text)
+    updateRecordText(record_id, text)

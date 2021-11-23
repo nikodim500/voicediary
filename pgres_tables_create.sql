@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS public.user;
 CREATE TABLE IF NOT EXISTS public."user"
 (
     user_id text COLLATE pg_catalog."default" NOT NULL,
-    user_name text COLLATE pg_catalog."ru_RU.utf8" NOT NULL,
+    user_name text COLLATE pg_catalog."ru_RU.utf8",
     user_login text COLLATE pg_catalog."ru_RU.utf8",
     user_pwd text COLLATE pg_catalog."ru_RU.utf8",
     created_at timestamp with time zone DEFAULT now(),
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS public.diary
     diary_id integer NOT NULL DEFAULT nextval('diary_diary_id_seq'::regclass),
     diary_no smallint NOT NULL,
     user_id text COLLATE pg_catalog."default" NOT NULL,
-    diary_name text COLLATE pg_catalog."ru_UA.utf8" NOT NULL,
+    diary_name text COLLATE pg_catalog."ru_UA.utf8",
     created_at timestamp with time zone NOT NULL DEFAULT now(),
     current_record integer,
     CONSTRAINT diary_pkey PRIMARY KEY (diary_id),
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS public.record
     record_id integer NOT NULL DEFAULT nextval('record_record_id_seq'::regclass),
     diary_id integer NOT NULL,
     record_no integer NOT NULL,
-    record_title text COLLATE pg_catalog."ru_RU.utf8" NOT NULL,
+    record_title text COLLATE pg_catalog."ru_RU.utf8",
     record_text text COLLATE pg_catalog."ru_RU.utf8",
     created_at timestamp with time zone NOT NULL DEFAULT now(),
     changed_at timestamp with time zone,
@@ -95,6 +95,7 @@ CREATE OR REPLACE FUNCTION public.assign_diary_no()
     VOLATILE NOT LEAKPROOF
 AS $BODY$
 BEGIN
+  UPDATE public.user SET current_diary = NEW.diary_id WHERE user_id = NEW.user_id;
   NEW.diary_no = (SELECT COUNT(diary_id)+1 FROM diary WHERE user_id = NEW.user_id);
   RETURN NEW;
 END;
@@ -113,6 +114,7 @@ CREATE OR REPLACE FUNCTION public.assign_record_no()
     VOLATILE NOT LEAKPROOF
 AS $BODY$
 BEGIN
+  UPDATE diary SET current_record_id = NEW.record_id WHERE diary_id = NEW.diary_id;
   NEW.record_no = (SELECT COUNT(record_id)+1 FROM record WHERE diary_id = NEW.diary_id);
   RETURN NEW;
 END;
