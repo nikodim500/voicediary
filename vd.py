@@ -128,11 +128,11 @@ def main():
                                     wait_for_text = True
                     else: # no record title
                         if new_session:
-                            response['response']['text'] = 'У Вас нет записей. Давайте создадим новую. Скажите заголовок'
+                            response['response']['text'] = 'У записи нет заголовка. Скажите заголовок'
                         else:
                              record_title = req['request']['original_utterance']
                              vddb.updateRecordTitle(record[0], record_title)
-                             response['response']['text'] = 'Начнем новую запись. Скажите заголовок'
+                             response['response']['text'] = 'Заголовок записан. Теперь диктуйте текст'
                 else: # no record
                     vddb.createRecord(diary[0])
                     response['response']['text'] = 'У Вас нет записей. Давайте создадим новую. Скажите заголовок'
