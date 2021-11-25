@@ -27,10 +27,11 @@ req_count = 0
 session_id = ""
 new_session = False
 wait_for_text = False
+wait_for_command = False
 
 @route("/", method='POST')
 def main():
-    global req_count, session_id, new_session, wait_for_text
+    global req_count, session_id, new_session, wait_for_text, wait_for_command
     print('main route')
     print(request)
     req = request.json
@@ -69,7 +70,7 @@ def main():
             if new_session:
                 response['response']['text'] = 'Приветствую, {}'.format(user[1])
         else:
-            user_name = req['request']['original_utterance']
+            user_name = req['request']['original_utterance'].title()
             user = vddb.updateUserName(user_id, user_name)
             response['response']['text'] = 'Пользователь {} создан'.format(user[1])
 
@@ -86,26 +87,41 @@ def main():
                     record_text = record[4]
                     if record_title:
                         if record_text:
-                            if wait_for_text:
-                                record_text = req['request']['original_utterance']
-                                vddb.updateRecordText(record[0], record_text)
-                                wait_for_text = False
-                                response['response']['text'] = 'Текст записан. Продолжим запись?'
+                            if new_session:
+                                response['response']['text'] = 'Вам доступны команды: дополнить запись, новая запись. Признесите команду'
+                                wait_for_command = True
                             else:
-                                response['response']['text'] = 'Давайте дополним запись. Диктуйте'
-                                wait_for_text = True
+                                if wait_for_command:
+                                    command = req['request']['original_utterance']
+                                    wait_for_command = False
+                                    if command.lowercase() == 'дополнить запись':
+                                        response['response']['text'] = 'Давайте дополним запись. Диктуйте'
+                                        wait_for_text = True
+                                    elif command.lowercase() == 'новая запись':
+                                        vddb.createRecord(diary[0])
+                                        response['response']['text'] = 'У Вас нет записей. Давайте создадим новую. Скажите заголовок'
+                                    else:
+                                        response['response']['text'] = 'Команда не распознана. Вам доступны команды: дополнить запись, новая запись. Признесите команду'
+                                        wait_for_command = True
+                                elif wait_for_text:
+                                    record_text = req['request']['original_utterance']
+                                    vddb.updateRecordText(record[0], record_text)
+                                    response['response']['text'] = 'Текст записан. Диктуйте дальше'
+                                else:
+                                    response['response']['text'] = 'Давайте дополним запись. Диктуйте'
+                                    wait_for_text = True
                         else:
                             if new_session:
                                 response['response']['text'] = 'Вы не закончили запись с заголовком {}. Диктуйте текст записи'.format(record_title)
+                                wait_for_text = True
                             else:
                                 if wait_for_text:
                                     record_text = req['request']['original_utterance']
                                     print(record_text)
                                     vddb.updateRecordText(record[0], record_text)
-                                    wait_for_text = False
-                                    response['response']['text'] = 'Текст записан. Продолжим запись?'
+                                    response['response']['text'] = 'Текст записан. Диктуйте дальше'
                                 else:
-                                    response['response']['text'] = 'Диктуйте текст'
+                                    response['response']['text'] = 'Теперь диктуйте текст'
                                     wait_for_text = True
                     else: # no record title
                         if new_session:
