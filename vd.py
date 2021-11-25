@@ -94,10 +94,10 @@ def main():
                                 if wait_for_command:
                                     command = req['request']['original_utterance']
                                     wait_for_command = False
-                                    if command.lowercase() == 'дополнить запись':
+                                    if command.lower() == 'дополнить запись':
                                         response['response']['text'] = 'Давайте дополним запись. Диктуйте'
                                         wait_for_text = True
-                                    elif command.lowercase() == 'новая запись':
+                                    elif command.lower() == 'новая запись':
                                         vddb.createRecord(diary[0])
                                         response['response']['text'] = 'У Вас нет записей. Давайте создадим новую. Скажите заголовок'
                                     else:
