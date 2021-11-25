@@ -88,21 +88,24 @@ def main():
                     if record_title:
                         if record_text:
                             if new_session:
-                                response['response']['text'] = 'Вам доступны команды: дополнить запись, новая запись. Признесите команду'
+                                response['response']['text'] = 'Вам доступны команды: дополнить запись, новая запись, прочитать запись. Признесите команду'
                                 wait_for_command = True
                             else:
                                 if wait_for_command:
                                     command = req['request']['original_utterance']
                                     wait_for_command = False
-                                    if command.lower() == 'дополнить запись':
-                                        response['response']['text'] = 'Давайте дополним запись. Диктуйте'
-                                        wait_for_text = True
-                                    elif command.lower() == 'новая запись':
-                                        vddb.createRecord(diary[0])
-                                        response['response']['text'] = 'У Вас нет записей. Давайте создадим новую. Скажите заголовок'
-                                    else:
-                                        response['response']['text'] = 'Команда не распознана. Вам доступны команды: дополнить запись, новая запись. Признесите команду'
-                                        wait_for_command = True
+                                    match command.lower():
+                                        case 'дополнить запись':
+                                            response['response']['text'] = 'Давайте дополним запись. Диктуйте'
+                                            wait_for_text = True
+                                        case 'новая запись':
+                                            vddb.createRecord(diary[0])
+                                            response['response']['text'] = 'У Вас нет записей. Давайте создадим новую. Скажите заголовок'
+                                        case 'прочитать запись':
+                                            response['response']['text'] = 'Запись {}. Текст записи: {}'.format(record_title, record_text)
+                                        case _:
+                                            response['response']['text'] = 'Команда не распознана. Вам доступны команды: дополнить запись, новая запись. Признесите команду'
+                                            wait_for_command = True
                                 elif wait_for_text:
                                     record_text = req['request']['original_utterance']
                                     vddb.updateRecordText(record[0], record_text)
