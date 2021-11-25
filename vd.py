@@ -101,9 +101,10 @@ def main():
                                         vddb.createRecord(diary[0])
                                         response['response']['text'] = 'У Вас нет записей. Давайте создадим новую. Скажите заголовок'
                                     elif command == 'прочитать запись':
-                                        response['response']['text'] = 'Запись {}. Текст записи: {}'.format(record_title, record_text)
+                                        response['response']['text'] = 'Запись {}. Текст записи: {}. Конец текста. Вам доступны команды: дополнить запись, новая запись, прочитать запись. Признесите команду'.format(record_title, record_text)
+                                        wait_for_command = True
                                     else:
-                                        response['response']['text'] = 'Команда не распознана. Вам доступны команды: дополнить запись, новая запись. Признесите команду'
+                                        response['response']['text'] = 'Команда не распознана. Вам доступны команды: дополнить запись, новая запись, прочитать запись. Признесите команду'
                                         wait_for_command = True
                                 elif wait_for_text:
                                     record_text = req['request']['original_utterance']
