@@ -5,6 +5,7 @@ import os
 import datetime as dt
 import json
 import vddb_postgresql as vddb
+from datetime import datetime, timezone
 
 # Enable logging on local filesystem
 
@@ -74,7 +75,11 @@ def main():
             user = vddb.updateUserName(user_id, user_name)
             response['response']['text'] = 'Пользователь {} создан'.format(user[1])
 
+        st = datetime.now(timezone.utc)
+        print('start get record: {}'.format(st))
         diary = vddb.getDiary(user[5])
+        et = datetime.now(timezone.utc)
+        print('end get record: {}, duratuion: {}'.format(et, et-st))
         print('if diary {}'.format(diary))
         if diary:
             diary_id = diary[0]
