@@ -79,7 +79,7 @@ def main():
         print('start get record: {}'.format(st))
         diary = vddb.getDiary(user[5])
         et = datetime.now(timezone.utc)
-        print('end get record: {}, duratuion: {}'.format(et, et-st))
+        print('end get record: {}, duration: {}'.format(et, et-st))
         print('if diary {}'.format(diary))
         if diary:
             diary_id = diary[0]
@@ -106,8 +106,12 @@ def main():
                                         vddb.createRecord(diary[0])
                                         response['response']['text'] = 'Давайте создадим новую запись. Скажите заголовок'
                                     elif command == 'прочитать запись':
+                                        st = datetime.now(timezone.utc)
+                                        print('start build text: {}'.format(st))
                                         response['response']['text'] = 'Запись {}. Текст записи: {}. Конец текста. Вам доступны команды: дополнить запись, новая запись, прочитать запись. Признесите команду'.format(record_title, record_text)
                                         wait_for_command = True
+                                        et = datetime.now(timezone.utc)
+                                        print('end build: {}, duration: {}'.format(et, et - st))
                                     else:
                                         response['response']['text'] = 'Команда не распознана. Вам доступны команды: дополнить запись, новая запись, прочитать запись. Признесите команду'
                                         wait_for_command = True
